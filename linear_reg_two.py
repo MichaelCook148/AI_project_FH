@@ -6,16 +6,10 @@ Created on Mon Dec  2 16:02:55 2019
 """
 
 import numpy as np
-import pandas as pd
 import tensorflow.compat.v1 as tf
-import matplotlib.pyplot as plt
+
 import math
-#import tensorflow_probability as tfp
-#tf.disable_eager_execution()
 
-
-#tfd = tfp.distributions
-#psd_kernels = tfp.positive_semidefinite_kernels
 
 np.random.seed(101)
 tf.set_random_seed(101)
@@ -216,21 +210,9 @@ np_xTrain = np.concatenate((np_xTrain1, np_xTrain2, np_xTrain3, np_xTrain4, np_x
 np_yTrain = np.concatenate((np_yTrain1, np_yTrain2, np_yTrain3, np_yTrain4, np_yTrain5, np_yTrain6, np_yTrain7, np_yTrain8, np_yTrain9, np_yTrain10))
 np_yTrain = np.reshape(np_yTrain, (np_yTrain.shape[0], 1))
 np_yTest = np.reshape(np_yTest, (np_yTest.shape[0],1))
-#np.append(np_yTrain[1], [8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8])
-#print(np_xTrain.shape)
-#print(np_yTrain.shape)
-#print()
-#print(np_xTrain[1])
-#print(np_yTrain[1])
-#i = 0
-#print(np_yTest.shape)
-#print(np_xTest[1])
-#x_unit_test = (np_xTest[61])
-#for tt in x_unit_test:
-    #print(tt)
-#x_unit_test = np.reshape(x_unit_test, (1,16))
-#print(x_unit_test)
-#y_unit_test = np.reshape([8], (1,1))
+
+
+#generating a list to compare results to prediction fro given players above
 for center in center_list:  
     i =0
     for play in range(len(np_yTest)):
@@ -244,13 +226,24 @@ for play in center_list:
     print(play[0], " is in spot ", play[1], " with actual value ", play[2])
 
 
+''''
+The orginal tutorial that I followed for linear regression is
+https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/2_BasicModels/linear_regression.py
+In that example it does a moniomal linear regression
 
+
+
+'''''
+
+##In the reffrence code above they use 1000 epochs, In testing I found that after 50 there was minimal difference. So the time was not worth it
 learning_rate = 0.01
 t_epochs = 100
-disp_step = 50
+
 
 num_samp = np_xTrain.shape[0]
 
+
+#All the features that we used
 X0 = tf.placeholder("float")
 X1 = tf.placeholder("float")
 X2 = tf.placeholder("float")
@@ -271,6 +264,7 @@ X15 = tf.placeholder("float")
 Y = tf.placeholder("float")
 
 rng = np.random
+#setting random weights
 W0 = tf.Variable(rng.random(), name = "weight0")
 W1 = tf.Variable(rng.random(), name = "weight1")
 W2 = tf.Variable(rng.random(), name = "weight2")
@@ -290,7 +284,7 @@ W15 = tf.Variable(rng.random(), name = "weight15")
 
 
 b = tf.Variable(rng.random(), name = "bias")
-
+#setting prediction and optimizer
 pred = tf.add_n([tf.multiply(X0,W0), tf.multiply(X1,W1) , tf.multiply(X2,W2) , tf.multiply(X3,W3) , tf.multiply(X4,W4) ,tf.multiply(X5,W5) , tf.multiply(X6,W6) , tf.multiply(X7,W7) , tf.multiply(X8,W8) , tf.multiply(X9,W9) , tf.multiply(X10,W10) ,tf.multiply(X11,W11) ,tf.multiply(X12,W12) ,tf.multiply(X13,W13) ,tf.multiply(X14,W14) , tf.multiply(X15,W15) ,b])
 
 cost = tf.reduce_sum(tf.pow(pred-Y, 2))/(2*num_samp)
@@ -307,8 +301,7 @@ with tf.Session() as sess:
         for(x,y) in zip(np_xTrain, np_yTrain):
             sess.run(optimizer, feed_dict={X0: x[0], X1: x[1],X2: x[2],X3: x[3],X4: x[4],X5: x[5],X6: x[6],X7: x[7],X8: x[8],X9: x[9],X10: x[10],X11: x[11],X12: x[12],X13: x[13],X14: x[14],X15: x[15], Y: y})
             
-        #if(epoch +1) % disp_step == 0:
-            
+        
 
     print("train step done")
     
